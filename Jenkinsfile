@@ -2,7 +2,6 @@ pipeline {
     agent { label 'ec2' } 
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credentials')
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
         KUBECONFIG = credentials('kubeconfig')
     }
@@ -58,7 +57,9 @@ pipeline {
 
     post {
         always {
-            sh 'kubectl get pods'
+            node {
+                sh "kubectl get pods"
+            }
         }
     }
 }
