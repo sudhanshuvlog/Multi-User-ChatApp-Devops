@@ -54,7 +54,7 @@ function Login({ setUsername, setLoggedIn }) {
       alignItems: 'center', 
       fontFamily: 'Arial, sans-serif' 
     }}>
-      <h1 style={{ color: '#25D366', marginBottom: '20px' }}>Sudhanshu's Chat Group</h1>
+      <h1 style={{ color: '#25D366', marginBottom: '20px' }}>Sudhanshu's Chat Group GFG</h1>
       <h2 style={{ marginBottom: '20px' }}>{isRegister ? 'Register' : 'Login'}</h2>
       {error && <p style={{ color: 'red', marginBottom: '10px' }}>{error}</p>}
       {success && <p style={{ color: '#25D366', marginBottom: '10px' }}>{success}</p>}
