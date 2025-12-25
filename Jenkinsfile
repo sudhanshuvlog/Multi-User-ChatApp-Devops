@@ -2,6 +2,7 @@ pipeline {
     agent { label 'ec2' } 
 
     environment {
+        TAG = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
     }
 
@@ -17,6 +18,7 @@ pipeline {
         stage('Deploy Backend') {
             steps {
                 sh '''
+                sed -i "s|latest|${TAG}|g" k8s/backend-deployment.yaml
                 kubectl apply -f k8s/backend-deployment.yaml
                 kubectl rollout status deployment/multi-chat-backend
                 '''
@@ -40,6 +42,7 @@ pipeline {
         stage('Deploy Frontend') {
             steps {
                 sh '''
+                sed -i "s|latest|${TAG}|g" k8s/frontend-deployment.yaml
                 kubectl apply -f k8s/frontend-deployment.yaml
 
                 '''

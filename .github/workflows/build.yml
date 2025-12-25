@@ -97,7 +97,7 @@ jobs:
           push: true
           context: ./backend
           file: ./backend/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:${{ github.sha }},${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
       -
         name: Build and push frontend dockerfile
         uses: docker/build-push-action@v6
@@ -105,4 +105,4 @@ jobs:
           push: true
           context: ./html
           file: ./html/Dockerfile
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-frontend:${{ github.sha }},${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-frontend:latest
