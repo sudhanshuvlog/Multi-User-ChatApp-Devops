@@ -25,7 +25,6 @@ spec:
             secretKeyRef:
               name: db-secret
               key: DATABASE_URL
-        env:
         - name: NODE_ENV
           value: "production"
 ---
@@ -40,4 +39,4 @@ spec:
     - protocol: TCP
       port: 5000
       targetPort: 5000
-  type: ClusterIP
+  type: LoadBalancer

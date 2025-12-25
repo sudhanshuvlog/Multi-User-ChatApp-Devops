@@ -12,7 +12,7 @@ function Chat({ username }) {
   }
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000')
+    const newSocket = io(window.BACKEND_URL || 'http://localhost:5000')
     setSocket(newSocket)
 
     newSocket.on('connect', () => {

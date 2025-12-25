@@ -16,7 +16,14 @@ spec:
       - name: frontend
         image: jinny1/multi-chat-frontend:latest
         ports:
-        - containerPort: 80
+        - containerPort: 80        
+        env:
+        - name: BACKEND_URL
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: BACKEND_URL
+
 ---
 apiVersion: v1
 kind: Service

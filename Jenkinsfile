@@ -22,10 +22,35 @@ pipeline {
             }
         }
 
-        stage('Deploy to EKS') {
+        stage('Deploy Backend') {
             steps {
                 sh '''
-                kubectl apply -f k8s/
+                kubectl apply -f k8s/backend-deployment.yaml
+                kubectl apply -f k8s/backend-service.yaml
+                kubectl rollout status deployment/multi-chat-backend
+                '''
+            }
+        }
+
+        stage('Get Backend URL and Create ConfigMap') {
+            steps {
+                script {
+                    def backendUrl = sh(
+                        script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'",
+                        returnStdout: true
+                    ).trim()
+                    sh """
+                    kubectl create configmap backend-config --from-literal=BACKEND_URL=http://${backendUrl}:5000 --dry-run=client -o yaml | kubectl apply -f -
+                    """
+                }
+            }
+        }
+
+        stage('Deploy Frontend') {
+            steps {
+                sh '''
+                kubectl apply -f k8s/frontend-deployment.yaml
+                kubectl apply -f k8s/frontend-service.yaml
                 '''
             }
         }

@@ -7,7 +7,7 @@ function Login({ setUsername, setLoggedIn }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (inputUsername.trim()) {
-      const res = await axios.post('http://localhost:5000/login', { username: inputUsername })
+      const res = await axios.post(`${window.BACKEND_URL || 'http://localhost:5000'}/login`, { username: inputUsername })
       if (res.data.success) {
         setUsername(inputUsername)
         setLoggedIn(true)
