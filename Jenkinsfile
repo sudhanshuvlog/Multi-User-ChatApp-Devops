@@ -18,7 +18,6 @@ pipeline {
             steps {
                 sh '''
                 kubectl apply -f k8s/backend-deployment.yaml
-                kubectl apply -f k8s/backend-service.yaml
                 kubectl rollout status deployment/multi-chat-backend
                 '''
             }
@@ -42,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                 kubectl apply -f k8s/frontend-deployment.yaml
-                kubectl apply -f k8s/frontend-service.yaml
+
                 '''
             }
         }
