@@ -91,15 +91,5 @@ pipeline {
                 """
             }
         }
-
-        stage('Production Deployment Success') {
-            when {
-                expression { IS_PROD_DEPLOYMENT == 'true' }
-            }
-            steps {
-                echo "✅ Successfully deployed build ${BUILD_NUMBER} to production!"
-                echo "Approved by: ${APPROVER ?: 'Auto-approved'}"
-            }
-        }
     }
 }

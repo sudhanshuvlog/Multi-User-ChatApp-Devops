@@ -6,28 +6,27 @@ A real-time multi-user chat web application built with Node.js, Express, Socket.
 
 This project demonstrates advanced DevOps practices for modern web applications:
 
-### 🚀 **Immutable Deployments with Build Tagging**
 - Every code commit generates a unique Docker image tag using Git commit SHA
 - Ensures traceability: each deployment is tied to specific code changes
 - Enables instant rollbacks to any previous version in case of failures.
 
-### 🏗️ **Microservices Architecture**
+### **Microservices Architecture**
 - Separated frontend (React) and backend (Node.js + Socket.io) services
 - Independent scaling and deployment of services
 - Technology-agnostic development (React frontend, Node.js backend) And Mysql Database
 
-### 🔄 **Dynamic Configuration Management**
+### **Dynamic Configuration Management**
 - Runtime URL configuration via Kubernetes ConfigMaps
 - Environment-based database switching (SQLite for local, MySQL for production)
 - Secrets management for database credentials
 - Zero-downtime deployments with rolling updates
 
 
-### 🔧 **CI/CD Pipeline Excellence**
+### **CI/CD Pipeline Excellence**
 - **GitHub Actions**: Automated testing, code quality checks, and Docker image building
 - **Jenkins**: Production deployment to EKS with dynamic image tagging
 
-### ☁️ **Cloud-Native Deployment**
+### **Cloud-Native Deployment**
 - Kubernetes orchestration with LoadBalancer services
 - AWS EKS for managed Kubernetes control plane
 - RDS MySQL for production database
@@ -88,7 +87,7 @@ The application follows a microservices architecture with separate containers fo
 ## CI/CD Pipeline
 
 ### GitHub Actions (CI)
-- **Triggers**: On push to master branch
+- **Triggers**: On PR raised to master branch
 - **Unit Testing**: Runs tests for both backend and frontend
 - **Docker Build**: Creates multi-stage production images
 - **Image Tagging**: Tags with commit SHA + latest
@@ -98,9 +97,8 @@ The application follows a microservices architecture with separate containers fo
 - **Deployment**: Automated deployment to EKS cluster
 - **Dynamic Tagging**: Uses commit SHA for image selection
 - **Configuration**: Creates ConfigMaps and Secrets dynamically
-- **Rollback**: Supports rolling back to previous versions
 
-## Production Deployment
+## Production Deployment (Step By Step Guide)
 
 ### AWS Infrastructure Setup
 
@@ -143,61 +141,7 @@ npm run test:watch    # Watch mode
 npm run test:coverage # With coverage report
 ```
 
-**Test Coverage:**
-- ✅ User Registration API
-- ✅ User Login API  
-- ✅ Authentication middleware
-- ✅ Database operations (SQLite/MySQL)
-- ✅ Message storage and retrieval
-- ✅ Error handling
-
-### Frontend Tests (React + Vitest)
-- **Framework**: Vitest with React Testing Library
-- **Coverage**: Component interactions, user flows, UI logic
-- **Location**: `html/src/test/`
-
-**Run Frontend Tests:**
-```bash
-cd html
-npm test              # Run all tests
-npm run test:ui       # Interactive UI
-npm run test:coverage # With coverage report
-```
-
-**Test Coverage:**
-- ✅ Login component (forms, validation, API calls)
-- ✅ Chat component (messaging, socket events, UI updates)
-- ✅ User registration flow
-- ✅ Error handling and edge cases
-- ✅ Component state management
-
-### CI/CD Testing
-- **GitHub Actions**: Runs all tests on every push/PR
-- **Coverage Reports**: Generated for both backend and frontend (LCOV format)
-- **SonarQube Integration**: Code quality analysis with coverage metrics
-- **Quality Gates**: Tests must pass before deployment
-
-### Code Quality & Security
-- **SonarQube Analysis**: Automated code quality checks including:
-  - Test coverage metrics
-  - Code smells detection
-  - Security vulnerabilities
-  - Maintainability index
-  - Technical debt analysis
-- **Quality Gates**: Pipeline blocks deployment if quality thresholds aren't met
-
-### Test Philosophy
-- **Unit Tests**: Individual functions and components
-- **Integration Tests**: API endpoints and database interactions
-- **UI Tests**: User interactions and component behavior
-- **Mocking**: External dependencies (Socket.io, Axios) are mocked
-
-### Writing New Tests
-- Backend: Add `.test.js` files in `backend/tests/`
-- Frontend: Add `.test.jsx` files in `html/src/test/`
-- Follow existing patterns for consistency
-
-## EKS Cluster Setup
+## EKS Cluster Setup (Step By Step)
 
 1. **Fork & Clone the repository**:
     - Fork the repository https://github.com/sudhanshuvlog/Multi-User-ChatApp-Devops.git
