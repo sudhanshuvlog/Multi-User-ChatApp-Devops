@@ -95,8 +95,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: .
-          file: ./backend/Dockerfile
+          context: ./backend
+          file: ./Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
       -
         name: Build and push frontend dockerfile
