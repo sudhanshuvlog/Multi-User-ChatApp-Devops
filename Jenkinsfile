@@ -6,12 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/sudhanshuvlog/Multi-User-ChatApp-Devops.git'
-            }
-        }
-
         stage('Create Secrets') {
             steps {
                 sh '''
