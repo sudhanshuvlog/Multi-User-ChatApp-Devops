@@ -3,16 +3,31 @@ pipeline {
 
     parameters {
         choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select deployment environment')
+        booleanParam(name: 'PROMOTE_TO_PROD', defaultValue: false, description: 'Promote this build to production')
     }
 
     environment {
         TAG = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
-        NAMESPACE = "${params.ENVIRONMENT}"
-        SERVICE_TYPE = "${params.ENVIRONMENT == 'prod' ? 'LoadBalancer' : 'ClusterIP'}"
+        NAMESPACE = "${params.PROMOTE_TO_PROD ? 'prod' : params.ENVIRONMENT}"
+        SERVICE_TYPE = "${params.PROMOTE_TO_PROD || params.ENVIRONMENT == 'prod' ? 'LoadBalancer' : 'ClusterIP'}"
     }
 
     stages {
+        stage('Validate Promotion') {
+            when {
+                expression { params.PROMOTE_TO_PROD }
+            }
+            steps {
+                script {
+                    // Validate that this is a promoted build
+                    if (!currentBuild.getCause(hudson.model.Cause$UpstreamCause)) {
+                        echo "This is a manual promotion to production"
+                    }
+                }
+            }
+        }
+
         stage('Create Namespace') {
             steps {
                 sh "kubectl create namespace ${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -"
@@ -41,7 +56,7 @@ pipeline {
         stage('Get Backend URL and Create ConfigMap') {
             steps {
                 script {
-                    if (params.ENVIRONMENT == 'prod') {
+                    if (SERVICE_TYPE == 'LoadBalancer') {
                         def backendUrl = sh(
                             script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --namespace=${NAMESPACE}",
                             returnStdout: true
@@ -66,6 +81,15 @@ pipeline {
                 sed -i "s|LoadBalancer|${SERVICE_TYPE}|g" k8s/frontend-deployment.yaml
                 kubectl apply -f k8s/frontend-deployment.yaml --namespace=${NAMESPACE}
                 """
+            }
+        }
+
+        stage('Promotion Success') {
+            when {
+                expression { params.PROMOTE_TO_PROD }
+            }
+            steps {
+                echo "✅ Successfully promoted build ${BUILD_NUMBER} to production!"
             }
         }
     }
