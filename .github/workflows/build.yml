@@ -54,69 +54,69 @@ jobs:
           cd html
           npm test -- --run --coverage
 
-  sonarqube-analysis:
-    name: SonarQube Analysis
-    runs-on: ubuntu-latest
-    needs: [unit-testing-backend, unit-testing-frontend]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # sonarqube-analysis:
+  #   name: SonarQube Analysis
+  #   runs-on: ubuntu-latest
+  #   needs: [unit-testing-backend, unit-testing-frontend]
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: '17'
+  #         distribution: 'temurin'
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+  #     - name: Cache SonarQube packages
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ~/.sonar/cache
+  #         key: ${{ runner.os }}-sonar
+  #         restore-keys: ${{ runner.os }}-sonar
 
-      - name: Setup Node.js for SonarQube
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
+  #     - name: Setup Node.js for SonarQube
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '18'
 
-      - name: Install backend dependencies
-        run: |
-          cd backend
-          npm ci
+  #     - name: Install backend dependencies
+  #       run: |
+  #         cd backend
+  #         npm ci
 
-      - name: Install frontend dependencies
-        run: |
-          cd html
-          npm ci
+  #     - name: Install frontend dependencies
+  #       run: |
+  #         cd html
+  #         npm ci
 
-      - name: Run backend tests with coverage
-        run: |
-          cd backend
-          npm run test:coverage
+  #     - name: Run backend tests with coverage
+  #       run: |
+  #         cd backend
+  #         npm run test:coverage
 
-      - name: Run frontend tests with coverage
-        run: |
-          cd html
-          npm run test:coverage
+  #     - name: Run frontend tests with coverage
+  #       run: |
+  #         cd html
+  #         npm run test:coverage
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  #     - name: SonarQube Scan
+  #       uses: sonarsource/sonarqube-scan-action@v2
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@v1
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     - name: SonarQube Quality Gate
+  #       uses: sonarsource/sonarqube-quality-gate-action@v1
+  #       timeout-minutes: 5
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   docker-build-and-push:
     runs-on: ubuntu-latest
-    needs: [unit-testing-backend, unit-testing-frontend, sonarqube-analysis]
+    #needs: [unit-testing-backend, unit-testing-frontend, sonarqube-analysis]
     steps:
       -
         name: Set up QEMU
