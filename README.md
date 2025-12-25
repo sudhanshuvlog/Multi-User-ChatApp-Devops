@@ -1,6 +1,6 @@
 # Multi User Chat Application - DevOps Project
 
-A real-time multi-user chat web application built with Node.js, Express, Socket.io, and React, featuring a complete DevOps pipeline With Jenkins & Github Action for automated deployment to Kubernetes on AWS Cloud. 
+A real-time multi-user chat web application built with Node.js, Express, Socket.io, and React, featuring a complete DevOps pipeline With Jenkins & Github Action for automated deployment to Kubernetes on AWS Cloud.
 
 ![Sample](image.png)
 
@@ -157,7 +157,7 @@ npm run test:coverage # With coverage report
     - Launch an AWS EC2 Instance with `t2.medium` as Instance Type, and Give atleast 15GB of EBS Volume.
     - In `Security Group` you can allow all the trafic.
 
-3. **Jenkins Setup**:
+3. **Jenkins Setup & SonarQube Server Setup**:
 
 ### Step 1: Launch Jenkins Server:
     ```bash
@@ -181,6 +181,10 @@ npm run test:coverage # With coverage report
         ```bash
         yum install git -y
         ```
+
+### Step 3: Configure SonarQube Server:
+    - Execute `docker-compose-install.md`
+    - Renamce the SonarQube-DockerCompose.yml to docker-compose.yaml and then run the command - "docker-compose up -d"
 
 ### Step 3: Configure AWS Credentials
 ```bash
