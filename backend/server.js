@@ -32,6 +32,10 @@ if (process.env.USE_LOCAL_DB === 'true') {
   });
 } else {
   // Use MySQL for production
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL environment variable is not set');
+    process.exit(1);
+  }
   db = mysql.createPool(process.env.DATABASE_URL);
   db.execute(`CREATE TABLE IF NOT EXISTS messages (
     id INT AUTO_INCREMENT PRIMARY KEY,

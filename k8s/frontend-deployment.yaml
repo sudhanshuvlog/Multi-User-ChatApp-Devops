@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: sudhanshu/multi-chat-frontend:latest
+        image: jinny1/multi-chat-frontend:latest
         ports:
         - containerPort: 80
 ---

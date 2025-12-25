@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: sudhanshu/multi-chat-backend:latest
+        image: jinny1/multi-chat-backend:latest
         ports:
         - containerPort: 5000
         env:
