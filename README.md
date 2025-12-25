@@ -126,6 +126,77 @@ The `Jenkinsfile` handles:
 **Frontend**:
 - `BACKEND_URL`: Injected via ConfigMap at runtime
 
+## Testing
+
+This project includes comprehensive test suites for both backend and frontend components.
+
+### Backend Tests (Node.js + Jest)
+- **Framework**: Jest with Supertest for API testing
+- **Coverage**: API endpoints, authentication, database operations
+- **Location**: `backend/tests/`
+
+**Run Backend Tests:**
+```bash
+cd backend
+npm test              # Run all tests
+npm run test:watch    # Watch mode
+npm run test:coverage # With coverage report
+```
+
+**Test Coverage:**
+- ✅ User Registration API
+- ✅ User Login API  
+- ✅ Authentication middleware
+- ✅ Database operations (SQLite/MySQL)
+- ✅ Message storage and retrieval
+- ✅ Error handling
+
+### Frontend Tests (React + Vitest)
+- **Framework**: Vitest with React Testing Library
+- **Coverage**: Component interactions, user flows, UI logic
+- **Location**: `html/src/test/`
+
+**Run Frontend Tests:**
+```bash
+cd html
+npm test              # Run all tests
+npm run test:ui       # Interactive UI
+npm run test:coverage # With coverage report
+```
+
+**Test Coverage:**
+- ✅ Login component (forms, validation, API calls)
+- ✅ Chat component (messaging, socket events, UI updates)
+- ✅ User registration flow
+- ✅ Error handling and edge cases
+- ✅ Component state management
+
+### CI/CD Testing
+- **GitHub Actions**: Runs all tests on every push/PR
+- **Coverage Reports**: Generated for both backend and frontend (LCOV format)
+- **SonarQube Integration**: Code quality analysis with coverage metrics
+- **Quality Gates**: Tests must pass before deployment
+
+### Code Quality & Security
+- **SonarQube Analysis**: Automated code quality checks including:
+  - Test coverage metrics
+  - Code smells detection
+  - Security vulnerabilities
+  - Maintainability index
+  - Technical debt analysis
+- **Quality Gates**: Pipeline blocks deployment if quality thresholds aren't met
+
+### Test Philosophy
+- **Unit Tests**: Individual functions and components
+- **Integration Tests**: API endpoints and database interactions
+- **UI Tests**: User interactions and component behavior
+- **Mocking**: External dependencies (Socket.io, Axios) are mocked
+
+### Writing New Tests
+- Backend: Add `.test.js` files in `backend/tests/`
+- Frontend: Add `.test.jsx` files in `html/src/test/`
+- Follow existing patterns for consistency
+
 ## EKS Cluster Setup
 
 1. **Fork & Clone the repository**:

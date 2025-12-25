@@ -2,27 +2,35 @@ pipeline {
     agent { label 'ec2' }
 
     parameters {
-        choice(name: 'ENVIRONMENT', choices: ['dev', 'prod'], description: 'Select deployment environment')
-        booleanParam(name: 'PROMOTE_TO_PROD', defaultValue: false, description: 'Promote this build to production')
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'staging', 'prod'], description: 'Select deployment environment')
+        booleanParam(name: 'FORCE_PROD_DEPLOYMENT', defaultValue: false, description: 'Force deployment to production (admin only)')
     }
 
     environment {
         TAG = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
-        NAMESPACE = "${params.PROMOTE_TO_PROD ? 'prod' : params.ENVIRONMENT}"
-        SERVICE_TYPE = "${params.PROMOTE_TO_PROD || params.ENVIRONMENT == 'prod' ? 'LoadBalancer' : 'ClusterIP'}"
+        NAMESPACE = "${params.ENVIRONMENT}"
+        SERVICE_TYPE = "${params.ENVIRONMENT == 'prod' ? 'LoadBalancer' : 'ClusterIP'}"
+        IS_PROD_DEPLOYMENT = "${params.ENVIRONMENT == 'prod' || params.FORCE_PROD_DEPLOYMENT}"
     }
 
     stages {
-        stage('Validate Promotion') {
+        stage('Validate Production Deployment') {
             when {
-                expression { params.PROMOTE_TO_PROD }
+                expression { IS_PROD_DEPLOYMENT == 'true' }
             }
             steps {
                 script {
-                    // Validate that this is a promoted build
-                    if (!currentBuild.getCause(hudson.model.Cause$UpstreamCause)) {
-                        echo "This is a manual promotion to production"
+                    echo "🚨 PRODUCTION DEPLOYMENT DETECTED 🚨"
+                    echo "Environment: ${NAMESPACE}"
+                    echo "Build: ${BUILD_NUMBER}"
+                    echo "Tag: ${TAG}"
+                    
+                    // Add approval for production deployments
+                    timeout(time: 15, unit: 'MINUTES') {
+                        input message: 'Deploy to Production?', 
+                              ok: 'Deploy',
+                              submitterParameter: 'APPROVER'
                     }
                 }
             }
@@ -65,7 +73,7 @@ pipeline {
                         kubectl create configmap backend-config --from-literal=BACKEND_URL=http://${backendUrl}:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
                         """
                     } else {
-                        // For dev, use cluster internal DNS
+                        // For dev/staging, use cluster internal DNS
                         sh """
                         kubectl create configmap backend-config --from-literal=BACKEND_URL=http://multi-chat-backend-service.${NAMESPACE}.svc.cluster.local:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
                         """
@@ -84,12 +92,13 @@ pipeline {
             }
         }
 
-        stage('Promotion Success') {
+        stage('Production Deployment Success') {
             when {
-                expression { params.PROMOTE_TO_PROD }
+                expression { IS_PROD_DEPLOYMENT == 'true' }
             }
             steps {
-                echo "✅ Successfully promoted build ${BUILD_NUMBER} to production!"
+                echo "✅ Successfully deployed build ${BUILD_NUMBER} to production!"
+                echo "Approved by: ${APPROVER ?: 'Auto-approved'}"
             }
         }
     }

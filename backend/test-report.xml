@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testExecutions version="1">
+  <file path="D:\GFG\MultiChatApplication-Devops\backend\tests\api.test.js">
+    <testCase name="Authentication Functions Password Hashing should hash password correctly" duration="67"/>
+    <testCase name="Authentication Functions Password Hashing should verify password correctly" duration="150"/>
+    <testCase name="Authentication Functions JWT Token Generation should generate valid JWT token" duration="17"/>
+    <testCase name="Authentication Functions JWT Token Generation should verify JWT token correctly" duration="1"/>
+    <testCase name="Authentication Functions JWT Token Generation should reject invalid JWT token" duration="8"/>
+    <testCase name="Database Schema Validation should validate table creation SQL" duration="1"/>
+    <testCase name="Environment Configuration should validate environment variables" duration="1"/>
+  </file>
+</testExecutions>
