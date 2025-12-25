@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-chat-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-chat-frontend
+  template:
+    metadata:
+      labels:
+        app: multi-chat-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: sudhanshu/multi-chat-frontend:latest
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-chat-frontend-service
+spec:
+  selector:
+    app: multi-chat-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

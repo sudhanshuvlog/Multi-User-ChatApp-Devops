@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-chat-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: multi-chat-backend
+  template:
+    metadata:
+      labels:
+        app: multi-chat-backend
+    spec:
+      containers:
+      - name: backend
+        image: sudhanshu/multi-chat-backend:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: USE_LOCAL_DB
+          value: "false"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: DATABASE_URL
+        env:
+        - name: NODE_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: multi-chat-backend-service
+spec:
+  selector:
+    app: multi-chat-backend
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
