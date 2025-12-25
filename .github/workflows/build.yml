@@ -96,7 +96,7 @@ jobs:
         with:
           push: true
           context: ./backend
-          file: ./Dockerfile
+          file: ./backend/Dockerfile
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
       -
         name: Build and push frontend dockerfile
