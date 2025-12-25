@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
-        KUBECONFIG = credentials('kubeconfig')
     }
 
     stages {
@@ -51,14 +50,6 @@ pipeline {
                 kubectl apply -f k8s/frontend-deployment.yaml
                 kubectl apply -f k8s/frontend-service.yaml
                 '''
-            }
-        }
-    }
-
-    post {
-        always {
-            node {
-                sh "kubectl get pods"
             }
         }
     }
