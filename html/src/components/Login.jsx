@@ -26,7 +26,7 @@ function Login({ setUsername, setLoggedIn }) {
       alignItems: 'center', 
       fontFamily: 'Arial, sans-serif' 
     }}>
-      <h1 style={{ color: '#25D366', marginBottom: '20px' }}>Sudhanshu Chat</h1>
+      <h1 style={{ color: '#25D366', marginBottom: '20px' }}>Sudhanshu Chat Group</h1>
       <h2 style={{ marginBottom: '20px' }}>Login</h2>
       <form onSubmit={handleSubmit} style={{ textAlign: 'center' }}>
         <input
