@@ -10,7 +10,7 @@ pipeline {
         TAG = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
         MYSQL_CONNECTION_STRING = credentials('mysql-connection-string')
         NAMESPACE = "${params.ENVIRONMENT}"
-        SERVICE_TYPE = "${params.ENVIRONMENT == 'prod' ? 'LoadBalancer' : 'ClusterIP'}"
+        SERVICE_TYPE = 'LoadBalancer'
         IS_PROD_DEPLOYMENT = "${params.ENVIRONMENT == 'prod' || params.FORCE_PROD_DEPLOYMENT}"
     }
 
@@ -21,7 +21,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "🚨 PRODUCTION DEPLOYMENT DETECTED 🚨"
+                    echo "PRODUCTION DEPLOYMENT DETECTED"
                     echo "Environment: ${NAMESPACE}"
                     echo "Build: ${BUILD_NUMBER}"
                     echo "Tag: ${TAG}"
@@ -65,17 +65,15 @@ pipeline {
             steps {
                 script {
                     if (SERVICE_TYPE == 'LoadBalancer') {
-                        def backendUrl = sh(
-                            script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --namespace=${NAMESPACE}",
-                            returnStdout: true
-                        ).trim()
+                        def backendHost = sh(script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --namespace=${NAMESPACE}", returnStdout: true).trim()
+                        if (!backendHost) {
+                            backendHost = sh(script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=${NAMESPACE}", returnStdout: true).trim()
+                        }
+                        if (!backendHost) {
+                            error "Could not determine backend LoadBalancer host/IP for service 'multi-chat-backend-service' in namespace ${NAMESPACE}"
+                        }
                         sh """
-                        kubectl create configmap backend-config --from-literal=BACKEND_URL=http://${backendUrl}:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
-                        """
-                    } else {
-                        // For dev/staging, use cluster internal DNS
-                        sh """
-                        kubectl create configmap backend-config --from-literal=BACKEND_URL=http://multi-chat-backend-service.${NAMESPACE}.svc.cluster.local:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+                        kubectl create configmap backend-config --from-literal=BACKEND_URL=http://${backendHost}:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
                         """
                     }
                 }

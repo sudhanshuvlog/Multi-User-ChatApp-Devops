@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sudhanshu Chat Group</title>
     <script>
-      window.BACKEND_URL = '${BACKEND_URL}' !== '${BACKEND_URL}' ? '${BACKEND_URL}' : '';
+      // runtime value injected by docker-entrypoint via envsubst
+      window.BACKEND_URL = '${BACKEND_URL}';
     </script>
     <style>
       body { margin: 0; }
