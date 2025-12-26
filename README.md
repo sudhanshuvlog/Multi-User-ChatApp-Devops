@@ -2,7 +2,13 @@
 
 A real-time multi-user chat web application built with Node.js, Express, Socket.io, and React, featuring a complete DevOps pipeline With Jenkins & Github Action for automated deployment to Kubernetes on AWS Cloud.
 
-![Sample](image.png)
+## Project Architecture
+
+![Project Architecture](project-architecture.png)
+
+## Project Sample
+
+![Sample](webapp-sample.png)
 
 ## DevOps Benefits & Highlights
 
