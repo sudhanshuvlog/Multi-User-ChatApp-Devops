@@ -61,7 +61,7 @@ function Chat({ username }) {
         fontSize: '20px', 
         fontWeight: 'bold' 
       }}>
-        Sudhanshu Chat Group GFG Workshop
+        Sudhanshu Chat Group GFG Workshop Final
       </div>
       <div style={{ 
         flex: 1, 
