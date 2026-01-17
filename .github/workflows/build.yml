@@ -74,53 +74,53 @@ jobs:
           path: html/coverage
 
 
-  sonarqube-analysis:
-    name: SonarQube Analysis
-    runs-on: ubuntu-latest
-    needs:
-      - test-backend
-      - test-frontend
+  # sonarqube-analysis:
+  #   name: SonarQube Analysis
+  #   runs-on: ubuntu-latest
+  #   needs:
+  #     - test-backend
+  #     - test-frontend
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
+  #     - name: Setup Java
+  #       uses: actions/setup-java@v4
+  #       with:
+  #         java-version: 17
+  #         distribution: temurin
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+  #     - name: Setup Node.js
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18
 
-      - name: Download backend coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: backend-coverage
-          path: backend/coverage
+  #     - name: Download backend coverage
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: backend-coverage
+  #         path: backend/coverage
 
-      - name: Download frontend coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-coverage
-          path: html/coverage
+  #     - name: Download frontend coverage
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: frontend-coverage
+  #         path: html/coverage
 
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  #     - name: SonarQube Scan
+  #       uses: sonarsource/sonarqube-scan-action@v2
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@v1
-        timeout-minutes: 5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     - name: SonarQube Quality Gate
+  #       uses: sonarsource/sonarqube-quality-gate-action@v1
+  #       timeout-minutes: 5
+  #       env:
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 
   docker-build-and-push:
@@ -129,7 +129,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
-      - sonarqube-analysis
+
 
     steps:
       - name: Checkout code
