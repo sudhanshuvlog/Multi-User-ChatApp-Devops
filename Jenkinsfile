@@ -8,11 +8,6 @@ pipeline {
             description: 'Select deployment environment'
         )
 
-        string(
-            name: 'IMAGE_TAG',
-            description: 'Docker image tag (GitHub SHA)'
-        )
-
         booleanParam(
             name: 'FORCE_PROD_DEPLOYMENT',
             defaultValue: false,
@@ -22,12 +17,23 @@ pipeline {
 
     environment {
         NAMESPACE = "${params.ENVIRONMENT}"
-        BACKEND_IMAGE  = "jinny1/multi-chat-backend:${params.IMAGE_TAG}"
-        FRONTEND_IMAGE = "jinny1/multi-chat-frontend:${params.IMAGE_TAG}"
         IS_PROD = "${params.ENVIRONMENT == 'prod' || params.FORCE_PROD_DEPLOYMENT}"
     }
 
     stages {
+
+        stage('Checkout Code & Set Image Tag') {
+            steps {
+                checkout scm
+                script {
+                    // Pick the commit ID as the image tag
+                    env.IMAGE_TAG = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                    env.BACKEND_IMAGE  = "jinny1/multi-chat-backend:${env.IMAGE_TAG}"
+                    env.FRONTEND_IMAGE = "jinny1/multi-chat-frontend:${env.IMAGE_TAG}"
+                    echo "Using IMAGE_TAG=${env.IMAGE_TAG}"
+                }
+            }
+        }
 
         stage('Validate Production Deployment') {
             when {
@@ -37,10 +43,10 @@ pipeline {
                 script {
                     echo "🚨 PRODUCTION DEPLOYMENT 🚨"
                     echo "Environment : ${NAMESPACE}"
-                    echo "Image Tag   : ${params.IMAGE_TAG}"
+                    echo "Image Tag   : ${env.IMAGE_TAG}"
                     echo "Build       : ${BUILD_NUMBER}"
 
-                    timeout(time: 15, unit: 'MINUTES') {
+                    timeout(time: 1, unit: 'HOURS') {
                         input message: 'Approve PRODUCTION deployment?',
                               ok: 'Deploy',
                               submitterParameter: 'APPROVER'
@@ -53,7 +59,7 @@ pipeline {
             steps {
                 sh """
                 kubectl create namespace ${NAMESPACE} \
-                --dry-run=client -o yaml | kubectl apply -f -
+                  --dry-run=client -o yaml | kubectl apply -f -
                 """
             }
         }
@@ -107,7 +113,7 @@ pipeline {
             echo "Deployment successful"
         }
         failure {
-            echo "Deployment failed"
+            echo "❌ Deployment failed"
         }
     }
 }
