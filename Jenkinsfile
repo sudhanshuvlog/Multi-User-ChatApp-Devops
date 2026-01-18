@@ -57,6 +57,7 @@ pipeline {
                 sed -i "s|LoadBalancer|${SERVICE_TYPE}|g" k8s/backend-deployment.yaml
                 kubectl apply -f k8s/backend-deployment.yaml --namespace=${NAMESPACE}
                 kubectl rollout status deployment/multi-chat-backend --namespace=${NAMESPACE}
+                sleep 20
                 """
             }
         }
