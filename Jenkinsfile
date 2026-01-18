@@ -89,6 +89,7 @@ pipeline {
                   -n ${NAMESPACE}
 
                 kubectl rollout status deployment/multi-chat-backend -n ${NAMESPACE}
+                sleep 20
                 """
             }
         }
