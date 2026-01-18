@@ -179,8 +179,9 @@ npm run test:coverage # With coverage report
    - On your Jenkins slave node, install JDK 17(You can make your base Ec2 Instance as slave node):
     
     ``` bash
-    wget https://download.oracle.com/java/17/archive/jdk-17.0.10_linux-x64_bin.rpm
-    yum install jdk-17.0.10_linux-x64_bin.rpm -y
+    wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.rpm
+    yum install jdk-21_linux-x64_bin.rpm -y
+
     ```
     - Start the agent and join it to the Jenkins Master Node using the provided join command.
     - Install `git` in slave node, as it will be further used while cloning the repo
