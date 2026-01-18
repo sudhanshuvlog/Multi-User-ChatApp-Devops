@@ -129,6 +129,7 @@ jobs:
     needs:
       - test-backend
       - test-frontend
+      - sonarqube-analysis
 
 
     steps:
