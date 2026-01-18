@@ -10,6 +10,10 @@ A real-time multi-user chat web application built with Node.js, Express, Socket.
 
 ![Sample](webapp-sample.png)
 
+### Pipeline
+
+![alt text](pipeline.png)
+
 ## DevOps Benefits & Highlights
 
 This project demonstrates advanced DevOps practices for modern web applications:
