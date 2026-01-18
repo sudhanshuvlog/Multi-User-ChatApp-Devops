@@ -93,6 +93,24 @@ pipeline {
             }
         }
 
+        stage('Get Backend URL and Create ConfigMap') {
+            steps {
+                script {
+                        def backendHost = sh(script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' --namespace=${NAMESPACE}", returnStdout: true).trim()
+                        if (!backendHost) {
+                            backendHost = sh(script: "kubectl get svc multi-chat-backend-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --namespace=${NAMESPACE}", returnStdout: true).trim()
+                        }
+                        if (!backendHost) {
+                            error "Could not determine backend LoadBalancer host/IP for service 'multi-chat-backend-service' in namespace ${NAMESPACE}"
+                        }
+                        sh """
+                        kubectl create configmap backend-config --from-literal=BACKEND_URL=http://${backendHost}:5000 --namespace=${NAMESPACE} --dry-run=client -o yaml | kubectl apply -f -
+                        """
+                    
+                }
+            }
+        }
+
         stage('Deploy Frontend') {
             steps {
                 sh """
