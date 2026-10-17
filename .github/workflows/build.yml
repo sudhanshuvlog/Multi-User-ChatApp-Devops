@@ -1,10 +1,10 @@
 name: Build
 
 on:
-  push:
-    # branches:
-    #   - master
-    #   - update
+  # push:
+  #   # branches:
+  #   #   - master
+  #   #   - update
   pull_request:
     branches:
       - master
@@ -149,7 +149,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & push backend image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./backend
           file: ./backend/Dockerfile
@@ -159,7 +159,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
 
       - name: Build & push frontend image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./html
           file: ./html/Dockerfile
