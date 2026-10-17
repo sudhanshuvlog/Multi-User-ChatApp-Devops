@@ -1,10 +1,10 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - master
-      - update
+  # push:
+  #   # branches:
+  #   #   - master
+  #   #   - update
   pull_request:
     branches:
       - master
@@ -36,7 +36,7 @@ jobs:
           npm test -- --coverage --watchAll=false
 
       - name: Upload backend coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-coverage
           path: backend/coverage
@@ -68,7 +68,7 @@ jobs:
           npm test -- --coverage
 
       - name: Upload frontend coverage
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage
           path: html/coverage
@@ -87,37 +87,37 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
+      # - name: Setup Java
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     java-version: 21
+      #     distribution: temurin
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
+      # - name: Setup Node.js
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: 18
 
       - name: Download backend coverage
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: backend-coverage
           path: backend/coverage
 
       - name: Download frontend coverage
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: frontend-coverage
           path: html/coverage
 
       - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@v2
+        uses: sonarsource/sonarqube-scan-action@v6
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: SonarQube Quality Gate
-        uses: sonarsource/sonarqube-quality-gate-action@v1
+        uses: SonarSource/sonarqube-quality-gate-action@cf038b0e0cdecfa9e56c198bbb7d21d751d62c3b
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -149,7 +149,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build & push backend image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./backend
           file: ./backend/Dockerfile
@@ -159,7 +159,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/multi-chat-backend:latest
 
       - name: Build & push frontend image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ./html
           file: ./html/Dockerfile
