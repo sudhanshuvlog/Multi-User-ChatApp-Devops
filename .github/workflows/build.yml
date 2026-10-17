@@ -1,13 +1,13 @@
 name: Build
 
 on:
-  # push:
-  #   # branches:
-  #   #   - master
-  #   #   - update
-  pull_request:
+  push:
     branches:
       - master
+    #   - update
+  # pull_request:
+  #   branches:
+  #     - master
 
 jobs:
   test-backend:
