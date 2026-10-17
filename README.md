@@ -211,7 +211,7 @@ eksctl version
 
 ### Step 5: Install kubectl
 ```bash
-curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.36.2/2026-07-05/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 sudo mv ./kubectl /usr/local/bin
 kubectl version --short --client
@@ -245,6 +245,10 @@ MultiChatApplication-Devops/
 ├── docker-compose.yml      # Local development
 └── README.md
 ```
+- Install the MySQL Community Client tool, connect to the database and create a chatdb database
+- sudo yum install -y https://dev.mysql.com/get/mysql84-community-release-el9-1.noarch.rpm
+- dnf install -y mysql-community-client
+- mysql -h database-1.cbaw4kes2epe.ap-south-1.rds.amazonaws.com -u admin -p
 
 
 ## Contact
