@@ -171,7 +171,7 @@ npm run test:coverage # With coverage report
 
 ### Step 1: Launch Jenkins Server:
     ```bash
-    docker run -p 8080:8080 -p 50000:50000 --name jenkins -dit --restart=on-failure -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts-jdk21
+    docker run -dit --name jenkins -v jenkins_home:/var/jenkins_home -p 8080:8080 -p 50000:50000 --restart=on-failure jenkins/jenkins:lts-jdk25
     ```
     While Loging to jenkins webui at port 8080 you will have to run this command to retreive the default password
     ```bash
@@ -180,11 +180,11 @@ npm run test:coverage # With coverage report
 
 ### Step 2: Configure Jenkins Slave Node:
    - Follow this doc to add a agent in Jenkins https://www.jenkins.io/doc/book/using/using-agents/
-   - On your Jenkins slave node, install JDK 17(You can make your base Ec2 Instance as slave node):
+   - On your Jenkins slave node, install JDK 25(You can make your base Ec2 Instance as slave node):
     
     ``` bash
-    wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.rpm
-    yum install jdk-21_linux-x64_bin.rpm -y
+      wget https://download.oracle.com/java/25/latest/jdk-25_linux-x64_bin.rpm
+      yum install jdk-25_linux-x64_bin.rpm -y
 
     ```
     - Start the agent and join it to the Jenkins Master Node using the provided join command.
